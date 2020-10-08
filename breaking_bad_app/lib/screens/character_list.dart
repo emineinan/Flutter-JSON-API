@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:breaking_bad_app/data/character_api.dart';
 import 'package:breaking_bad_app/model/character.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 class CharacterList extends StatefulWidget {
   CharacterList({Key key}) : super(key: key);
@@ -14,18 +14,19 @@ class CharacterList extends StatefulWidget {
 class _CharacterListState extends State<CharacterList> {
   List<Character> characterList = new List<Character>();
 
-  void getCharacters() async {
-    Response response = await get("https://breakingbadapi.com/api/characters");
-    setState(() {
-      Iterable list = json.decode(response.body);
-      characterList = list.map((model) => Character.fromJson(model)).toList();
+  void getCharactersfromApi() async {
+    CharacterApi.getCharacters().then((response) {
+      setState(() {
+        Iterable list = json.decode(response.body);
+        characterList = list.map((model) => Character.fromJson(model)).toList();
+      });
     });
   }
 
   @override
   void initState() {
     super.initState();
-    getCharacters();
+    getCharactersfromApi();
   }
 
   @override
